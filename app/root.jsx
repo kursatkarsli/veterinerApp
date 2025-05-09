@@ -4,6 +4,8 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
+  Navigate,
 } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
@@ -11,6 +13,7 @@ import Sidebar from "./components/Sidebar";
 import "./app.css";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export function Layout({ children }) {
   return (
@@ -31,12 +34,33 @@ export function Layout({ children }) {
 
 function AppContent() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
-  if (!isAuthenticated) {
+  // Yükleme durumunda boş bir div göster
+  if (loading) {
+    return null;
+  }
+
+  // Login sayfası için özel kontrol
+  if (location.pathname === "/login") {
+    if (isAuthenticated) {
+      return <Navigate to="/dashboard" replace />;
+    }
     return <Outlet />;
   }
 
+  // Giriş yapılmamışsa login'e yönlendir
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Ana sayfa için özel kontrol
+  if (location.pathname === "/") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Giriş yapılmış ve korumalı sayfalar için layout
   return (
     <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />

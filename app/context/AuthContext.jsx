@@ -7,12 +7,18 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // LocalStorage'dan kullanıcı bilgisini al
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing stored user:", error);
+        localStorage.removeItem("user");
+      }
     }
     setLoading(false);
-  }, []);
+  }, []); // Sadece component mount olduğunda çalışsın
 
   const login = (userData) => {
     setUser(userData);
@@ -24,13 +30,15 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated: !!user, loading }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    login,
+    logout,
+    isAuthenticated: !!user,
+    loading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

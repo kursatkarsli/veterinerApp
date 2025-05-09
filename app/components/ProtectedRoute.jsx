@@ -5,13 +5,16 @@ export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
-  if (loading) return null;
+  // Yükleme durumunda boş bir div göster
+  if (loading) {
+    return null;
+  }
 
+  // Giriş yapılmamışsa login'e yönlendir
   if (!isAuthenticated) {
-    // Kullanıcı giriş yapmamışsa, login sayfasına yönlendir
-    // state ile birlikte önceki sayfayı da gönder
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Giriş yapılmışsa içeriği göster
   return <>{children}</>;
-} 
+}
