@@ -7,16 +7,7 @@ import tr from "date-fns/locale/tr";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
 import Modal from "./Modal";
-import {
-  addDays,
-  subDays,
-  addWeeks,
-  subWeeks,
-  addMonths,
-  subMonths,
-  format as formatDate,
-  isSameDay,
-} from "date-fns";
+import { addDays, format as formatDate } from "date-fns";
 
 const locales = {
   tr: tr,
