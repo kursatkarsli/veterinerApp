@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
 import Modal from "./Modal";
 import { addDays, format as formatDate } from "date-fns";
+import MonthEventModal from "./MonthEventModal";
 
 const locales = {
   tr: tr,
@@ -136,14 +137,14 @@ function CustomToolbar({ view, onView, date, onNavigate }) {
         >
           Hafta
         </button>
-        {/* <button
+        <button
           className={`px-3 py-1 rounded ${
             view === "month" ? "bg-vet-primary text-white" : "bg-gray-100"
           }`}
           onClick={() => onView("month")}
         >
           Ay
-        </button> */}
+        </button>
         <button
           className={`px-3 py-1 rounded ${
             view === "agenda" ? "bg-vet-primary text-white" : "bg-gray-100"
@@ -166,9 +167,20 @@ export default function VetCalendar() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [viewDate, setViewDate] = useState(new Date());
+  const [monthModalOpen, setMonthModalOpen] = useState(false);
+  const [monthModalDate, setMonthModalDate] = useState(null);
 
   // Slot seçimiyle yeni event ekleme
   const handleSelectSlot = ({ start, end }) => {
+    // Geçmiş tarih kontrolü
+    if (start <= new Date(new Date().setDate(new Date().getDate() - 1))) {
+      return;
+    }
+    if (view === "month") {
+      setMonthModalDate(start);
+      setMonthModalOpen(true);
+      return;
+    }
     setSelectedSlot({ start, end });
     setNewTitle("");
     setModalType("add");
@@ -233,6 +245,25 @@ export default function VetCalendar() {
     setViewDate(newDate);
   };
 
+  // Aylık modal kaydet
+  const handleMonthEventSave = (form) => {
+    // form.date ve form.time birleştirip event objesi oluştur
+    const [year, month, day] = form.date.split("-");
+    const [hour, minute] = form.time.split(":");
+    const start = new Date(year, month - 1, day, hour, minute);
+    const end = new Date(start.getTime() + 60 * 60 * 1000); // 1 saatlik event
+    setEvents((prev) => [
+      ...prev,
+      {
+        id: Date.now() + Math.random(),
+        title: form.title,
+        description: form.description,
+        start,
+        end,
+      },
+    ]);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-card p-4 w-full">
       <Calendar
@@ -246,7 +277,7 @@ export default function VetCalendar() {
         endAccessor="end"
         style={{ height: 500, width: "100%" }}
         className="w-full"
-        views={["day", "week", "agenda"]}
+        views={["day", "week", "agenda", "month"]}
         view={view}
         onView={setView}
         defaultView="week"
@@ -261,6 +292,7 @@ export default function VetCalendar() {
           week: "Hafta",
           day: "Gün",
           agenda: "Ajanda",
+          month: "Ay",
         }}
       />
       {/* Modal: Randevu Ekle */}
@@ -368,6 +400,12 @@ export default function VetCalendar() {
           )}
         </form>
       </Modal>
+      <MonthEventModal
+        open={monthModalOpen}
+        onClose={() => setMonthModalOpen(false)}
+        onSave={handleMonthEventSave}
+        initialDate={monthModalDate}
+      />
     </div>
   );
 }
