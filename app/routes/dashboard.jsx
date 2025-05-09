@@ -42,11 +42,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const handleLogout = async () => {
-    await Promise.resolve(logout());
-    navigate("/login", { replace: true });
-  };
-
   return (
     <ProtectedRoute>
       <div className="min-h-screen flex bg-gray-100">
@@ -54,22 +49,10 @@ export default function Dashboard() {
 
         {/* Main area */}
         <div className="flex-1 flex flex-col min-h-screen">
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          <div className="flex-1 flex flex-col">
-            <div className="flex justify-end items-center gap-4 px-6 py-2">
-              <span className="text-gray-600 font-medium">{user?.email}</span>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                Çıkış Yap
-              </button>
-            </div>
-            <div className="p-6">
-              <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+          <div className="p-6">
+            <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-              <DashboardContent />
-            </div>
+            <DashboardContent />
           </div>
         </div>
       </div>
