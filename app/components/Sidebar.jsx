@@ -11,7 +11,7 @@ const menuItems = [
 export default function Sidebar({ open, setOpen }) {
   return (
     <aside
-      className={`relative z-30 top-0 left-0 h-full bg-white shadow-lg transition-all duration-300 flex flex-col ${
+      className={`relative z-30 top-0 min-h-screen left-0 h-full bg-white shadow-lg transition-all duration-300 flex flex-col ${
         open ? "w-48" : "w-14"
       }`}
     >

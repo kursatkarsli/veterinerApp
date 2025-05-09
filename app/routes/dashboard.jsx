@@ -1,8 +1,7 @@
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import Card from "../components/Card";
 
@@ -52,15 +51,7 @@ export default function Dashboard() {
     <ProtectedRoute>
       <div className="min-h-screen flex bg-gray-100">
         {/* Sidebar */}
-        <div className="hidden md:block">
-          <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-        </div>
-        {/* Mobilde hamburger menü */}
-        <div className="md:hidden fixed z-40">
-          {sidebarOpen && (
-            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-          )}
-        </div>
+
         {/* Main area */}
         <div className="flex-1 flex flex-col min-h-screen">
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -74,7 +65,11 @@ export default function Dashboard() {
                 Çıkış Yap
               </button>
             </div>
-            <DashboardContent />
+            <div className="p-6">
+              <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+
+              <DashboardContent />
+            </div>
           </div>
         </div>
       </div>

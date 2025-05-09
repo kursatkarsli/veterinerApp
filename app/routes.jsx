@@ -5,4 +5,5 @@ export default [
   route("login", "routes/login.jsx"),
   route("dashboard", "routes/dashboard.jsx"),
   route("appointments", "routes/appointments.jsx"),
+  route("patients", "routes/patients.jsx"),
 ];

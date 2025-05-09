@@ -6,7 +6,10 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 import "./app.css";
+import { useState } from "react";
 
 export function Layout({ children }) {
   return (
@@ -26,9 +29,20 @@ export function Layout({ children }) {
 }
 
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   return (
     <AuthProvider>
-      <Outlet />
+      <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900">
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        <div
+          className={`flex-1 flex flex-col min-h-screen transition-all duration-300 `}
+        >
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </div>
+      </div>
     </AuthProvider>
   );
 }
