@@ -68,6 +68,42 @@ function CustomEvent({ event }) {
   );
 }
 
+function CustomToolbar({ view, onView, date }) {
+  return (
+    <div className="flex justify-between items-center mb-4">
+      <div className="text-lg font-semibold text-gray-700">
+        {format(date, "d MMMM yyyy", { locale: tr })}
+      </div>
+      <div className="flex gap-2">
+        <button
+          className={`px-3 py-1 rounded ${
+            view === "day" ? "bg-vet-primary text-white" : "bg-gray-100"
+          }`}
+          onClick={() => onView("day")}
+        >
+          Gün
+        </button>
+        <button
+          className={`px-3 py-1 rounded ${
+            view === "week" ? "bg-vet-primary text-white" : "bg-gray-100"
+          }`}
+          onClick={() => onView("week")}
+        >
+          Hafta
+        </button>
+        <button
+          className={`px-3 py-1 rounded ${
+            view === "month" ? "bg-vet-primary text-white" : "bg-gray-100"
+          }`}
+          onClick={() => onView("month")}
+        >
+          Ay
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function VetCalendar() {
   const [view, setView] = useState("week");
   const [events, setEvents] = useState(initialEvents);
@@ -142,6 +178,7 @@ export default function VetCalendar() {
       <Calendar
         components={{
           event: CustomEvent,
+          toolbar: CustomToolbar,
         }}
         localizer={localizer}
         events={events}
@@ -161,9 +198,6 @@ export default function VetCalendar() {
           week: "Hafta",
           day: "Gün",
           month: "Ay",
-          today: "Bugün",
-          previous: "Geri",
-          next: "İleri",
         }}
       />
       {/* Modal: Randevu Ekle */}

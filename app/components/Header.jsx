@@ -1,7 +1,9 @@
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 export default function Header({ sidebarOpen, setSidebarOpen }) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await Promise.resolve(logout());
