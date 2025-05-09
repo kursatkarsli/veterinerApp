@@ -22,27 +22,57 @@ const localizer = dateFnsLocalizer({
 
 const initialEvents = [
   {
+    id: 1,
     title: "Kedi Aşı Randevusu",
     start: new Date(2024, 5, 25, 10, 0),
     end: new Date(2024, 5, 25, 11, 0),
   },
   {
+    id: 2,
     title: "Köpek Kontrol",
     start: new Date(2024, 5, 25, 13, 30),
     end: new Date(2024, 5, 25, 14, 30),
   },
   {
+    id: 3,
     title: "Muhabbet Kuşu Muayene",
     start: new Date(2024, 5, 26, 9, 0),
     end: new Date(2024, 5, 26, 10, 0),
   },
 ];
 
+function CustomEvent({ event }) {
+  return (
+    <div
+      style={{
+        background: "#2563eb",
+        color: "#fff",
+        borderRadius: 4,
+        width: "90%",
+        left: "5%",
+        position: "relative",
+        minHeight: 16,
+        maxHeight: 20,
+        marginBottom: 2,
+        zIndex: 2,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "0.75rem",
+        padding: "0 2px",
+      }}
+      className="text-xs"
+    >
+      {event.title}
+    </div>
+  );
+}
+
 export default function VetCalendar() {
   const [view, setView] = useState("week");
   const [events, setEvents] = useState(initialEvents);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(null); // 'add' | 'detail'
+  const [modalType, setModalType] = useState(null); // 'add' | 'detail' | 'edit'
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newTitle, setNewTitle] = useState("");
@@ -64,11 +94,16 @@ export default function VetCalendar() {
 
   // Modal'da event ekle
   const handleAddEvent = (e) => {
-    e.preventDefault();
+    e && e.preventDefault && e.preventDefault();
     if (newTitle && selectedSlot) {
       setEvents([
         ...events,
-        { start: selectedSlot.start, end: selectedSlot.end, title: newTitle },
+        {
+          id: Date.now() + Math.random(),
+          start: selectedSlot.start,
+          end: selectedSlot.end,
+          title: newTitle,
+        },
       ]);
       setModalOpen(false);
       setSelectedSlot(null);
@@ -76,9 +111,38 @@ export default function VetCalendar() {
     }
   };
 
+  // Event sil
+  const handleDeleteEvent = () => {
+    setEvents(events.filter((ev) => ev.id !== selectedEvent.id));
+    setModalOpen(false);
+    setSelectedEvent(null);
+  };
+
+  // Edit moduna geç
+  const handleEditEvent = () => {
+    setNewTitle(selectedEvent.title);
+    setModalType("edit");
+  };
+
+  // Event güncelle
+  const handleUpdateEvent = (e) => {
+    e.preventDefault();
+    setEvents((prev) =>
+      prev.map((ev) =>
+        ev.id === selectedEvent.id ? { ...ev, title: newTitle } : ev
+      )
+    );
+    setModalOpen(false);
+    setSelectedEvent(null);
+    setNewTitle("");
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-card p-4 w-full">
       <Calendar
+        components={{
+          event: CustomEvent,
+        }}
         localizer={localizer}
         events={events}
         startAccessor="start"
@@ -142,12 +206,26 @@ export default function VetCalendar() {
         onClose={() => setModalOpen(false)}
         title="Randevu Detayı"
         footer={
-          <button
-            className="w-full py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
-            onClick={() => setModalOpen(false)}
-          >
-            Kapat
-          </button>
+          <div className="flex gap-2">
+            <button
+              className="flex-1 py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
+              onClick={() => setModalOpen(false)}
+            >
+              Kapat
+            </button>
+            <button
+              className="flex-1 py-2 px-4 bg-vet-primary text-white rounded hover:bg-vet-secondary transition"
+              onClick={handleEditEvent}
+            >
+              Düzenle
+            </button>
+            <button
+              className="flex-1 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 transition"
+              onClick={handleDeleteEvent}
+            >
+              Sil
+            </button>
+          </div>
         }
       >
         {selectedEvent && (
@@ -159,6 +237,40 @@ export default function VetCalendar() {
             </div>
           </div>
         )}
+      </Modal>
+      {/* Modal: Event Düzenle */}
+      <Modal
+        open={modalOpen && modalType === "edit"}
+        onClose={() => setModalOpen(false)}
+        title="Randevu Düzenle"
+        footer={
+          <button
+            className="w-full py-2 px-4 bg-vet-primary text-white rounded hover:bg-vet-secondary transition"
+            onClick={handleUpdateEvent}
+            disabled={!newTitle}
+          >
+            Kaydet
+          </button>
+        }
+      >
+        <form onSubmit={handleUpdateEvent} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Başlık</label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              required
+              autoFocus
+            />
+          </div>
+          {selectedEvent && (
+            <div className="text-xs text-gray-500">
+              {format(selectedEvent.start, "Pp", { locale: tr })} -{" "}
+              {format(selectedEvent.end, "Pp", { locale: tr })}
+            </div>
+          )}
+        </form>
       </Modal>
     </div>
   );
