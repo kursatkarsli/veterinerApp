@@ -43,8 +43,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await Promise.resolve(logout());
     navigate("/login", { replace: true });
   };
 
