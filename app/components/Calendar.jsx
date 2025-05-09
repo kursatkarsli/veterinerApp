@@ -84,8 +84,15 @@ function CustomToolbar({ view, onView, date, onNavigate }) {
   if (view === "day") {
     label = formatDate(date, "d MMMM yyyy", { locale: tr });
   } else if (view === "week") {
+    const weekStart = startOfWeek(date, { weekStartsOn: 1 });
+    const start = formatDate(weekStart, "d MMMM", { locale: tr });
+    const end = formatDate(addDays(weekStart, 6), "d MMMM yyyy", {
+      locale: tr,
+    });
+    label = `${start} - ${end}`;
+  } else if (view === "agenda") {
     const start = formatDate(date, "d MMMM", { locale: tr });
-    const end = formatDate(addDays(date, 6), "d MMMM yyyy", { locale: tr });
+    const end = formatDate(addDays(date, 7), "d MMMM yyyy", { locale: tr });
     label = `${start} - ${end}`;
   } else if (view === "month") {
     label = formatDate(date, "MMMM yyyy", { locale: tr });
@@ -146,6 +153,14 @@ function CustomToolbar({ view, onView, date, onNavigate }) {
         >
           Ay
         </button> */}
+        <button
+          className={`px-3 py-1 rounded ${
+            view === "agenda" ? "bg-vet-primary text-white" : "bg-gray-100"
+          }`}
+          onClick={() => onView("agenda")}
+        >
+          Ajanda
+        </button>
       </div>
     </div>
   );
@@ -221,6 +236,12 @@ export default function VetCalendar() {
     setNewTitle("");
   };
 
+  // Navigasyon fonksiyonunu react-big-calendar'ın beklediği şekilde güncelle
+  const handleNavigate = (newDate) => {
+    console.log(newDate);
+    setViewDate(newDate);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-card p-4 w-full">
       <Calendar
@@ -234,7 +255,7 @@ export default function VetCalendar() {
         endAccessor="end"
         style={{ height: 500, width: "100%" }}
         className="w-full"
-        views={["day", "week", "month"]}
+        views={["day", "week", "agenda"]}
         view={view}
         onView={setView}
         defaultView="week"
@@ -243,11 +264,12 @@ export default function VetCalendar() {
         onSelectSlot={handleSelectSlot}
         onSelectEvent={handleSelectEvent}
         date={viewDate}
-        onNavigate={setViewDate}
+        onNavigate={handleNavigate}
+        length={7}
         messages={{
           week: "Hafta",
           day: "Gün",
-          // month: "Ay",
+          agenda: "Ajanda",
         }}
       />
       {/* Modal: Randevu Ekle */}
@@ -284,7 +306,6 @@ export default function VetCalendar() {
           )}
         </form>
       </Modal>
-      {/* Modal: Event Detay */}
       <Modal
         open={modalOpen && modalType === "detail"}
         onClose={() => setModalOpen(false)}
