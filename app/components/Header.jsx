@@ -19,7 +19,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
         <span>🍔</span>
       </button>
       <span className="font-bold text-xl text-blue-700 flex items-center gap-2">
-        <img src="/vet-logo.png" alt="Veteriner Logo" className="w-8 h-8" />
+        <img src="/vetlogo.webp" alt="Veteriner Logo" className="w-8 h-8" />
         VetApp
       </span>
       <div className="flex justify-end items-center gap-4 px-6 py-2">
