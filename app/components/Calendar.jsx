@@ -7,6 +7,16 @@ import tr from "date-fns/locale/tr";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
 import Modal from "./Modal";
+import {
+  addDays,
+  subDays,
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+  format as formatDate,
+  isSameDay,
+} from "date-fns";
 
 const locales = {
   tr: tr,
@@ -68,11 +78,48 @@ function CustomEvent({ event }) {
   );
 }
 
-function CustomToolbar({ view, onView, date }) {
+function CustomToolbar({ view, onView, date, onNavigate }) {
+  // Tarih başlığı
+  let label = "";
+  if (view === "day") {
+    label = formatDate(date, "d MMMM yyyy", { locale: tr });
+  } else if (view === "week") {
+    const start = formatDate(date, "d MMMM", { locale: tr });
+    const end = formatDate(addDays(date, 6), "d MMMM yyyy", { locale: tr });
+    label = `${start} - ${end}`;
+  } else if (view === "month") {
+    label = formatDate(date, "MMMM yyyy", { locale: tr });
+  }
+
+  // Navigasyon fonksiyonları
+  const handleToday = () => onNavigate("TODAY");
+  const handlePrev = () => onNavigate("PREV");
+  const handleNext = () => onNavigate("NEXT");
+
   return (
     <div className="flex justify-between items-center mb-4">
-      <div className="text-lg font-semibold text-gray-700">
-        {format(date, "d MMMM yyyy", { locale: tr })}
+      <div className="flex gap-2 items-center">
+        <button
+          onClick={handlePrev}
+          className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          ←
+        </button>
+        <button
+          onClick={handleToday}
+          className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          Bugün
+        </button>
+        <button
+          onClick={handleNext}
+          className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200"
+        >
+          →
+        </button>
+        <span className="ml-4 text-lg font-semibold text-gray-700">
+          {label}
+        </span>
       </div>
       <div className="flex gap-2">
         <button
@@ -91,14 +138,14 @@ function CustomToolbar({ view, onView, date }) {
         >
           Hafta
         </button>
-        <button
+        {/* <button
           className={`px-3 py-1 rounded ${
             view === "month" ? "bg-vet-primary text-white" : "bg-gray-100"
           }`}
           onClick={() => onView("month")}
         >
           Ay
-        </button>
+        </button> */}
       </div>
     </div>
   );
@@ -112,6 +159,7 @@ export default function VetCalendar() {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newTitle, setNewTitle] = useState("");
+  const [viewDate, setViewDate] = useState(new Date());
 
   // Slot seçimiyle yeni event ekleme
   const handleSelectSlot = ({ start, end }) => {
@@ -194,10 +242,12 @@ export default function VetCalendar() {
         selectable
         onSelectSlot={handleSelectSlot}
         onSelectEvent={handleSelectEvent}
+        date={viewDate}
+        onNavigate={setViewDate}
         messages={{
           week: "Hafta",
           day: "Gün",
-          month: "Ay",
+          // month: "Ay",
         }}
       />
       {/* Modal: Randevu Ekle */}
