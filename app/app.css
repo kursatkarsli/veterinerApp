@@ -206,7 +206,7 @@
 .rbc-event {
   min-height: 16px !important;
   max-height: 20px !important;
-  max-width: 25%;
+  /* max-width: 25%; */
   padding: 0 2px !important;
   /* font-size: 11px !important; */
   border-radius: 4px !important;
@@ -233,6 +233,9 @@ body {
   /* @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   } */
+}
+.rbc-event-label {
+  display: none !important;
 }
 
 .rbc-allday-cell,
