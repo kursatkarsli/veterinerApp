@@ -1,39 +1,78 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
     content: [
         './app/**/*.{js,jsx,ts,tsx}',
-        './app/components/**/*.{js,jsx,ts,tsx}',
-        './app/routes/**/*.{js,jsx,ts,tsx}',
-        './app/root.{js,jsx,ts,tsx}',
+        './components/**/*.{js,jsx,ts,tsx}',
     ],
+    darkMode: ["class"],
     theme: {
+        container: {
+            center: true,
+            padding: "2rem",
+            screens: {
+                "2xl": "1400px",
+            },
+        },
         extend: {
             colors: {
-                vet: {
-                    primary: '#2563eb', // mavi
-                    secondary: '#22d3ee', // cyan
-                    accent: '#fbbf24', // sarı
-                    danger: '#ef4444', // kırmızı
-                    cardBlue: '#bfdbfe',
-                    cardGreen: '#bbf7d0',
-                    cardYellow: '#fef9c3',
-                    cardPink: '#fbcfe8',
+                border: "hsl(var(--border))",
+                input: "hsl(var(--input))",
+                ring: "hsl(var(--ring))",
+                background: "hsl(var(--background))",
+                foreground: "hsl(var(--foreground))",
+                primary: {
+                    DEFAULT: "hsl(var(--primary))",
+                    foreground: "hsl(var(--primary-foreground))",
+                },
+                secondary: {
+                    DEFAULT: "hsl(var(--secondary))",
+                    foreground: "hsl(var(--secondary-foreground))",
+                },
+                destructive: {
+                    DEFAULT: "hsl(var(--destructive))",
+                    foreground: "hsl(var(--destructive-foreground))",
+                },
+                muted: {
+                    DEFAULT: "hsl(var(--muted))",
+                    foreground: "hsl(var(--muted-foreground))",
+                },
+                accent: {
+                    DEFAULT: "hsl(var(--accent))",
+                    foreground: "hsl(var(--accent-foreground))",
+                },
+                popover: {
+                    DEFAULT: "hsl(var(--popover))",
+                    foreground: "hsl(var(--popover-foreground))",
+                },
+                card: {
+                    DEFAULT: "hsl(var(--card))",
+                    foreground: "hsl(var(--card-foreground))",
+                },
+                'vet-card-blue': '#bfdbfe',
+                'vet-card-green': '#bbf7d0',
+                'vet-card-yellow': '#fef9c3',
+                'vet-card-pink': '#fbcfe8',
+            },
+            borderRadius: {
+                lg: "var(--radius)",
+                md: "calc(var(--radius) - 2px)",
+                sm: "calc(var(--radius) - 4px)",
+            },
+            keyframes: {
+                "accordion-down": {
+                    from: { height: "0" },
+                    to: { height: "var(--radix-accordion-content-height)" },
+                },
+                "accordion-up": {
+                    from: { height: "var(--radix-accordion-content-height)" },
+                    to: { height: "0" },
                 },
             },
-            fontFamily: {
-                sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                logo: ['Poppins', 'Inter', 'sans-serif'],
-            },
-            boxShadow: {
-                card: '0 2px 8px 0 rgba(0,0,0,0.06)',
-            },
-            // Merkezi hizalama için utility
-            centerize: {
-                display: 'flex',
-                'align-items': 'center',
-                'justify-content': 'center',
+            animation: {
+                "accordion-down": "accordion-down 0.2s ease-out",
+                "accordion-up": "accordion-up 0.2s ease-out",
             },
         },
     },
-    plugins: [],
+    plugins: [require("tailwindcss-animate")],
 }; 

@@ -1,3 +1,4 @@
+import "./app.css";
 import {
   isRouteErrorResponse,
   Meta,
@@ -6,11 +7,11 @@ import {
   ScrollRestoration,
   useLocation,
   Navigate,
+  Links,
 } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import "./app.css";
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -21,7 +22,12 @@ export function Layout({ children }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        />
         <Meta />
+        <Links />
       </head>
       <body>
         {children}

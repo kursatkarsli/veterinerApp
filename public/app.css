@@ -1,0 +1,72 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* react-big-calendar event kutusu özelleştirme */
+.rbc-event {
+  min-height: 16px !important;
+  max-height: 20px !important;
+  /* max-width: 25%; */
+  padding: 0 2px !important;
+  /* font-size: 11px !important; */
+  border-radius: 4px !important;
+  background: #2563eb !important;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #fff;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1.5px #e5e7eb;
+}
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer base {
+  html,
+  body {
+    @apply bg-white dark:bg-gray-950;
+
+    /* @media (prefers-color-scheme: dark) {
+      color-scheme: dark;
+    } */
+  }
+}
+
+@layer components {
+  .vet-card {
+    @apply rounded-lg shadow-sm border transition-colors duration-200;
+  }
+
+  .vet-card-blue {
+    @apply bg-vet-cardBlue hover:bg-vet-cardBlue/80;
+  }
+
+  .vet-card-green {
+    @apply bg-vet-cardGreen hover:bg-vet-cardGreen/80;
+  }
+
+  .vet-card-yellow {
+    @apply bg-vet-cardYellow hover:bg-vet-cardYellow/80;
+  }
+
+  .vet-card-pink {
+    @apply bg-vet-cardPink hover:bg-vet-cardPink/80;
+  }
+}
+
+.rbc-event-label {
+  display: none !important;
+}
+
+.rbc-allday-cell,
+.rbc-allday-header {
+  display: none !important;
+}
+.rbc-time-content {
+  border: none !important;
+}

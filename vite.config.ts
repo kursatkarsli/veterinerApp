@@ -1,8 +1,23 @@
 import { reactRouter } from "@react-router/dev/vite";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+  plugins: [reactRouter(), tsconfigPaths()],
+  css: {
+    postcss: "./postcss.config.js",
+    modules: {
+      localsConvention: "camelCase",
+    },
+  },
+  build: {
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
+  },
+  base: "/",
+  publicDir: "public",
 });
