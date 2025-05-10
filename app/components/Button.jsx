@@ -7,16 +7,28 @@ const Button = ({
   size = "md",
   className = "",
   icon,
+  loading = false,
+  disabled = false,
+  fullWidth = false,
   ...props
 }) => {
   const iconSize = buttonStyles.icon[size] || buttonStyles.icon.base;
+  const baseClasses = `${buttonStyles.base} ${buttonStyles.variants[variant]} ${buttonStyles.sizes[size]} ${className}`;
+  const stateClasses = `${disabled ? "opacity-50 cursor-not-allowed" : ""} ${
+    fullWidth ? "w-full" : ""
+  }`;
 
   return (
     <button
-      className={`${buttonStyles.base} ${buttonStyles.variants[variant]} ${buttonStyles.sizes[size]} ${className}`}
+      className={`${baseClasses} ${stateClasses}`}
+      disabled={disabled || loading}
       {...props}
     >
-      {icon && <span className={iconSize}>{icon}</span>}
+      {loading ? (
+        <span className="inline-block animate-spin mr-2">⟳</span>
+      ) : icon ? (
+        <span className={iconSize}>{icon}</span>
+      ) : null}
       {children}
     </button>
   );

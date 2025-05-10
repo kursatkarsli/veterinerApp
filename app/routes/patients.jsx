@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Button from "../components/Button";
+import Alert from "../components/Alert";
+import Badge from "../components/Badge";
 import PatientList from "../components/patients/PatientList";
 import PatientModal from "../components/patients/PatientModal";
 import AddPatientModal from "../components/patients/AddPatientModal";
@@ -11,6 +13,7 @@ const initialPatients = [
     species: "Köpek",
     owner: "Ali Veli",
     lastVisit: "2024-05-01",
+    status: "active",
   },
   {
     id: 2,
@@ -18,6 +21,7 @@ const initialPatients = [
     species: "Kedi",
     owner: "Ayşe Fatma",
     lastVisit: "2024-04-20",
+    status: "inactive",
   },
   {
     id: 3,
@@ -25,6 +29,7 @@ const initialPatients = [
     species: "Kuş",
     owner: "Mehmet Can",
     lastVisit: "2024-03-15",
+    status: "active",
   },
 ];
 
@@ -32,13 +37,40 @@ export default function Patients() {
   const [patients, setPatients] = useState(initialPatients);
   const [selected, setSelected] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const handleAddPatient = (patient) => {
     setPatients((prev) => [...prev, patient]);
+    setAlert({
+      type: "success",
+      message: "Hasta başarıyla eklendi.",
+    });
+    setTimeout(() => setAlert(null), 3000);
   };
 
   const handleDeletePatient = (patientId) => {
     setPatients((prev) => prev.filter((patient) => patient.id !== patientId));
+    setAlert({
+      type: "info",
+      message: "Hasta kaydı silindi.",
+    });
+    setTimeout(() => setAlert(null), 3000);
+  };
+
+  const getStatusBadge = (status) => {
+    const variants = {
+      active: "success",
+      inactive: "warning",
+    };
+    const labels = {
+      active: "Aktif",
+      inactive: "Pasif",
+    };
+    return (
+      <Badge variant={variants[status]} size="sm">
+        {labels[status]}
+      </Badge>
+    );
   };
 
   return (
@@ -69,10 +101,21 @@ export default function Patients() {
         </Button>
       </div>
 
+      {alert && (
+        <Alert
+          variant={alert.type}
+          onClose={() => setAlert(null)}
+          className="mb-4"
+        >
+          {alert.message}
+        </Alert>
+      )}
+
       <PatientList
         patients={patients}
         onPatientSelect={setSelected}
         onDelete={handleDeletePatient}
+        getStatusBadge={getStatusBadge}
       />
 
       {selected && (

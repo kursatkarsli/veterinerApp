@@ -3,7 +3,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate, useLocation, Navigate } from "react-router";
 import FloatingInput from "../components/FloatingInput";
+import Button from "../components/Button";
+import Alert from "../components/Alert";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Geçerli bir email adresi giriniz"),
@@ -13,6 +16,7 @@ const loginSchema = z.object({
 export default function Login() {
   const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const {
     register,
     handleSubmit,
@@ -26,6 +30,7 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
+      setError(null);
       // TODO: Burada API çağrısı yapılacak
       // Şimdilik direkt login yapıyoruz
       login({ email: data.email });
@@ -34,6 +39,7 @@ export default function Login() {
       navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
+      setError("Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.");
     }
   };
 
@@ -45,6 +51,11 @@ export default function Login() {
             Hesabınıza giriş yapın
           </h2>
         </div>
+        {error && (
+          <Alert variant="danger" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
           <div className="space-y-4">
             <FloatingInput
@@ -63,12 +74,15 @@ export default function Login() {
           </div>
 
           <div>
-            <button
+            <Button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border-none rounded-[16px] text-base font-semibold text-gray-700 bg-[#e0e0e0] shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] hover:shadow-[inset_2px_2px_6px_#bebebe,inset_-2px_-2px_6px_#ffffff] transition-all duration-200"
+              variant="primary"
+              fullWidth
+              loading={loading}
+              className="rounded-[16px]"
             >
               Giriş Yap
-            </button>
+            </Button>
           </div>
         </form>
       </div>

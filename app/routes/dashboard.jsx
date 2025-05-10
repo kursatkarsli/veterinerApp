@@ -2,36 +2,69 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router";
 import { useState } from "react";
-import Header from "../components/Header";
 import Card from "../components/Card";
+import Badge from "../components/Badge";
 
 const cards = [
   {
     label: "Randevular",
     to: "/appointments",
-    color: "bg-vet-card-blue",
+    variant: "vet.blue",
     icon: "📅",
+    badge: "3 Yeni",
+    badgeVariant: "primary",
   },
   {
     label: "Hastalar",
     to: "/patients",
-    color: "bg-vet-card-green",
+    variant: "vet.green",
     icon: "🐾",
+    badge: "Aktif",
+    badgeVariant: "success",
   },
   {
     label: "Aşı Takibi",
     to: "/vaccines",
-    color: "bg-vet-card-yellow",
+    variant: "vet.yellow",
     icon: "💉",
+    badge: "2 Bekleyen",
+    badgeVariant: "warning",
   },
-  { label: "Raporlar", to: "/reports", color: "bg-vet-card-pink", icon: "📊" },
+  {
+    label: "Raporlar",
+    to: "/reports",
+    variant: "vet.pink",
+    icon: "📊",
+    badge: "Güncel",
+    badgeVariant: "info",
+  },
 ];
 
 function DashboardContent() {
   return (
-    <main className=" p-6 grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <main className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card) => (
-        <Card key={card.to} {...card} />
+        <Card
+          key={card.to}
+          variant={card.variant}
+          className="hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
+          header={
+            <div className="flex items-center justify-between">
+              <span className="text-2xl">{card.icon}</span>
+              {card.badge && (
+                <Badge variant={card.badgeVariant} size="sm">
+                  {card.badge}
+                </Badge>
+              )}
+            </div>
+          }
+        >
+          <Link to={card.to} className="block">
+            <h3 className="text-lg font-semibold text-gray-800">
+              {card.label}
+            </h3>
+          </Link>
+        </Card>
       ))}
     </main>
   );
